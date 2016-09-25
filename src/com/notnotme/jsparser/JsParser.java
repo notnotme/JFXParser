@@ -10,7 +10,7 @@ public class JsParser extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-        MainWindowController.create(this, stage);
+		MainWindowController.create(this, stage);
 	}
 
 	/**

@@ -65,9 +65,9 @@ public final class MainWindowController extends StageController {
 
 	public static void create(Application application, Stage stage) throws Exception {
 		FXMLLoader.load(MainWindowController.class.getResource("/com/notnotme/jsparser/ui/fxml/MainWindow.fxml"),
-                ResourceBundle.getBundle("com.notnotme.jsparser.ui.fxml.ui"),
-                null,
-                new ControllerFactory(application, stage));
+				ResourceBundle.getBundle("com.notnotme.jsparser.ui.fxml.ui"),
+				null,
+				new ControllerFactory(application, stage));
 	}
 		
 	public MainWindowController(Application application, Stage stage) {

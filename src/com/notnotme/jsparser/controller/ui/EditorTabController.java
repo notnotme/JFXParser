@@ -88,7 +88,7 @@ public final class EditorTabController extends StageController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-        
+		
 		mEditorContextMenu = createContextMenu();
 		mCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(mCodeArea));
 		mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
