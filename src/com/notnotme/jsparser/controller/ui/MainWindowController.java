@@ -207,6 +207,7 @@ public final class MainWindowController extends StageController {
 					mParserChooser.setDisable(true);
 					mStatusLabel.setText("");
 				}
+				event.consume();
 			});
 			newTab.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
 				if (newValue) {

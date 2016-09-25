@@ -98,7 +98,6 @@ public final class EditorTabController extends StageController {
 		});
 		
 		setParserFileType(mParserFileType);
-		
 	}
 	
 	public void shutDown() {
