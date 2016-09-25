@@ -38,10 +38,10 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 				// EditorTabController is final so we don't need to guess the ctor
 				return new EditorTabController(mApplication, mStage, mProcessorFileType);
 			} else if (StageController.class.isAssignableFrom(type)) {
-				// Call the base class ctor
+				// Call the class first ctor
 				return type.getConstructors()[0].newInstance(mApplication, mStage);
 			} else if (Controller.class.isAssignableFrom(type)) {
-				// Call the base class ctor
+				// Call the class first ctor
 				return type.getConstructors()[0].newInstance(mApplication);
 			} 
 		} catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
