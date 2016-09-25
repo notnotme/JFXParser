@@ -10,6 +10,11 @@ Features:
 Current format supported:
 - Json
 
+Dependencies:
+- RichTextFX https://github.com/TomasMikula/RichTextFX
+- minimal-json https://github.com/ralfstx/minimal-json
+- muxm http://musound.sourceforge.net/muxm/index.html
+
 Credits:
 - About dialog music is done by Ultrasyd (http://ultrasyd.free.fr/)
 - Sound lib used is muxm (http://musound.sourceforge.net/muxm/index.html)
