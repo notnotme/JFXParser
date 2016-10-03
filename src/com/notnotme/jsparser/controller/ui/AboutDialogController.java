@@ -4,8 +4,6 @@ import com.notnotme.jsparser.controller.factory.ControllerFactory;
 import com.notnotme.jsparser.controller.factory.StageController;
 import com.notnotme.jsparser.utils.ModulePlayer;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -58,23 +55,23 @@ public final class AboutDialogController extends StageController {
 			getStage().hide();
 			event.consume();
 		});
-		mWebsiteLink.setOnAction((ActionEvent event) -> {
+		mWebsiteLink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument(mWebsiteLink.getText());
 				event.consume();
 		});
-		mGithubLink.setOnAction((ActionEvent event) -> {
+		mGithubLink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument(mGithubLink.getText());
 			event.consume();
 		});
-		mMuxmLink.setOnAction((ActionEvent event) -> {
+		mMuxmLink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument("http://musound.sourceforge.net/muxm/index.html");
 			event.consume();
 		});
-		mSongLink.setOnAction((ActionEvent event) -> {
+		mSongLink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument("http://ultrasyd.free.fr/");
 			event.consume();
 		});
-		mIconsLink.setOnAction((ActionEvent event) -> {
+		mIconsLink.setOnAction(event -> {
 			getApplication().getHostServices().showDocument("http://github.com/damieng/silk-companion/");
 			event.consume();
 		});
@@ -85,15 +82,15 @@ public final class AboutDialogController extends StageController {
 		stage.setScene(new Scene(mRoot));
 		stage.setResizable(false);
 		stage.centerOnScreen();
-		stage.setOnShown((WindowEvent event) -> {
+		stage.setOnShown(event -> {
 			onEnter();
 			event.consume();
 		});
-		stage.setOnHiding((WindowEvent event) -> {
+		stage.setOnHiding(event -> {
 			onExit();
 			event.consume();
 		});
-		stage.addEventHandler(KeyEvent.KEY_PRESSED, (Event event) -> {
+		stage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			getStage().hide();
 			event.consume();
 		});

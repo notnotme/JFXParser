@@ -9,13 +9,11 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Background;
@@ -25,7 +23,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 
 import java.io.File;
@@ -84,26 +81,26 @@ public final class MainWindowController extends StageController {
 
 			mMenuNew.getItems().add(menuItem);
 		}
-		mItemLoad.setOnAction((ActionEvent event) -> {
+		mItemLoad.setOnAction(event -> {
 			loadFile();
 			event.consume();
 		});
-		mItemClose.setOnAction((ActionEvent event) -> {
+		mItemClose.setOnAction(event -> {
 			onStageClose();
 			event.consume();
 		});
-		mItemAbout.setOnAction((ActionEvent event) -> {
+		mItemAbout.setOnAction(event -> {
 			showAboutDialog();
 			event.consume();
 		});
 
-		mTabPane.setOnDragOver((DragEvent event) -> {
+		mTabPane.setOnDragOver(event -> {
 			if (event.getGestureSource() != mTabPane && event.getDragboard().hasFiles()) {
 				event.acceptTransferModes(TransferMode.COPY);
 			}
 			event.consume();
 		});
-		mTabPane.setOnDragEntered((DragEvent event) -> {
+		mTabPane.setOnDragEntered(event -> {
 			if (event.getGestureSource() != mTabPane && event.getDragboard().hasFiles()) {
 				mTabPane.setOpacity(0.7f);
 				mTabPane.setBackground(new Background(
@@ -111,14 +108,14 @@ public final class MainWindowController extends StageController {
 			}
 			event.consume();
 		});
-		mTabPane.setOnDragExited((DragEvent event) -> {
+		mTabPane.setOnDragExited(event -> {
 			if (event.getGestureSource() != mTabPane && event.getDragboard().hasFiles()) {
 				mTabPane.setOpacity(1f);
 				mTabPane.setBackground(Background.EMPTY);
 			}
 			event.consume();
 		});
-		mTabPane.setOnDragDropped((DragEvent event) -> {
+		mTabPane.setOnDragDropped(event -> {
 			Dragboard db = event.getDragboard();
 			boolean success = false;
 			if (db.hasFiles()) {
@@ -157,7 +154,7 @@ public final class MainWindowController extends StageController {
 		stage.setScene(new Scene(mRoot));
 		stage.centerOnScreen();
 		stage.setResizable(true);
-		stage.setOnCloseRequest((WindowEvent event) -> {
+		stage.setOnCloseRequest(event -> {
 			onStageClose();
 			event.consume();
 		});
@@ -191,7 +188,7 @@ public final class MainWindowController extends StageController {
 			EditorTab newTab = new EditorTab(file);
 			newTab.setClosable(true);
 			newTab.setContent(newTabController.getRoot());
-			newTab.setOnCloseRequest((Event event) -> {
+			newTab.setOnCloseRequest(event -> {
 				// todo: show yes/no save dialog
 				if (newTabController.isEdited()) {
 					newTabController.saveContent();
@@ -204,7 +201,7 @@ public final class MainWindowController extends StageController {
 					mStatusLabel.setText("");
 				}
 			});
-			newTab.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+			newTab.selectedProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue) {
 					EditorTabController tabController = mTabControllers.get(mTabPane.getTabs().indexOf(newTab));
 					tabController.onEditorTabSelected();
@@ -236,7 +233,7 @@ public final class MainWindowController extends StageController {
 
 	private void onStageClose() {
 		// check if tabs are edited and build a list with them
-		mTabControllers.forEach((tabController) -> {
+		mTabControllers.forEach(tabController -> {
 			if (tabController.isEdited()) {
 				// todo: show yes/no save dialog
 				tabController.saveContent();

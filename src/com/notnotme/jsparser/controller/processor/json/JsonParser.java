@@ -5,8 +5,10 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
 import com.notnotme.jsparser.controller.processor.Parser;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.util.Pair;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
@@ -20,8 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class JsonParser implements Parser<Pair<String, JsonValue>, String> {
-
-	private final static String TAG = JsonParser.class.getSimpleName();
 
 	private static final String BRACE_PATTERN = "(\\{|\\})";
 	private static final String BRACKET_PATTERN = "(\\[|\\])";
@@ -39,8 +39,6 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 			+ "|(?<NULL>" + NULL_PATTERN + ")"
 			+ "|(?<BOOLEAN>" + BOOLEAN_PATTERN + ")"
 	);
-
-	private JsonValue mJsonValue;
 
 	public JsonParser() {
 	}
@@ -90,18 +88,48 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 	public List<TreeTableColumn<Pair<String, JsonValue>, String>> getTreeTableViewColumns() {
 		TreeTableColumn<Pair<String, JsonValue>, String> columnTree = new TreeTableColumn<>("TREE");
 		columnTree.setPrefWidth(150);
-		columnTree.setCellValueFactory(new TreeCellValueFactory());
-		columnTree.setCellFactory(new TreeCellFactory());
+		columnTree.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getKey()));
+		columnTree.setCellFactory(param -> new TextFieldTreeTableCell<>());
 
 		TreeTableColumn<Pair<String, JsonValue>, String> columnType = new TreeTableColumn<>("TYPE");
 		columnType.setPrefWidth(150);
-		columnType.setCellValueFactory(new TypeCellValueFactory());
-		columnType.setCellFactory(new TypeCellFactory());
+		columnType.setCellValueFactory(param -> {
+			JsonValue value = param.getValue().getValue().getValue();
+			String stringValue = "";
+			if (value.isObject()) {
+				stringValue = "Object";
+			} else if (value.isArray()) {
+				stringValue = "Array [" + value.asArray().size() + "]";
+			} else if (value.isBoolean()) {
+				stringValue = "Boolean";
+			} else if (value.isString()) {
+				stringValue = "String";
+			} else if (value.isNumber()) {
+				stringValue = "Number";
+			} else if (value.isNull()) {
+				stringValue = "Object/Array/Value";
+			}
+
+			return new ReadOnlyStringWrapper(stringValue);
+		});
+		columnType.setCellFactory(param -> new TextFieldTreeTableCell<>());
 
 		TreeTableColumn<Pair<String, JsonValue>, String> columnValue = new TreeTableColumn<>("VALUE");
 		columnValue.setPrefWidth(250);
-		columnValue.setCellValueFactory(new ValueCellValueFactory());
-		columnValue.setCellFactory(new ValueCellFactory());
+		columnValue.setCellValueFactory(param -> {
+			JsonValue value = param.getValue().getValue().getValue();
+			if (value.isObject() || value.isArray()) return null;
+
+			String stringValue;
+			if (value.isString()) {
+				stringValue = value.asString();
+			} else {
+				stringValue = param.getValue().getValue().getValue().toString();
+			}
+
+			return new ReadOnlyStringWrapper(stringValue);
+		});
+		columnValue.setCellFactory(param -> new TextFieldTreeTableCell<>());
 
 		ArrayList<TreeTableColumn<Pair<String, JsonValue>, String>> columnList = new ArrayList<>();
 		columnList.add(columnTree);

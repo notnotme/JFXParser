@@ -5,15 +5,14 @@ import com.notnotme.jsparser.controller.factory.StageController;
 import com.notnotme.jsparser.controller.processor.Parser;
 import com.notnotme.jsparser.controller.processor.ParserFileType;
 import com.notnotme.jsparser.ui.view.EditorTab;
+import com.notnotme.jsparser.ui.view.EditorTreeTableRow;
 import com.notnotme.jsparser.utils.Utils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
@@ -22,7 +21,10 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -81,11 +83,13 @@ public final class EditorTabController extends StageController {
 		mEditorContextMenu = createContextMenu();
 		mCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(mCodeArea));
 		mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
-		mCodeArea.setOnContextMenuRequested((ContextMenuEvent event) -> {
+		mCodeArea.setOnContextMenuRequested(event -> {
 			mCodeArea.getContextMenu().show(getStage());
 			event.consume();
 		});
 
+		ResourceBundle resourceBundle = getResources();
+		mTreeTableView.setRowFactory(param -> new EditorTreeTableRow(resourceBundle));
 		setParserFileType(mParserFileType);
 	}
 
@@ -147,28 +151,28 @@ public final class EditorTabController extends StageController {
 
 		MenuItem itemCopy = new MenuItem(resources.getString("copy"));
 		itemCopy.setAccelerator(KeyCombination.keyCombination("CTRL+C"));
-		itemCopy.setOnAction((ActionEvent event) -> {
+		itemCopy.setOnAction(event -> {
 			mCodeArea.copy();
 			event.consume();
 		});
 
 		MenuItem itemCut = new MenuItem(resources.getString("cut"));
 		itemCut.setAccelerator(KeyCombination.keyCombination("CTRL+X"));
-		itemCut.setOnAction((ActionEvent event) -> {
+		itemCut.setOnAction(event -> {
 			mCodeArea.cut();
 			event.consume();
 		});
 
 		MenuItem itemPaste = new MenuItem(resources.getString("paste"));
 		itemPaste.setAccelerator(KeyCombination.keyCombination("CTRL+V"));
-		itemPaste.setOnAction((ActionEvent event) -> {
+		itemPaste.setOnAction(event -> {
 			mCodeArea.paste();
 			event.consume();
 		});
 
 		MenuItem itemPrettyPrint = new MenuItem(resources.getString("format"));
 		itemPrettyPrint.setAccelerator(KeyCombination.keyCombination("CTRL+SPACE"));
-		itemPrettyPrint.setOnAction((ActionEvent event) -> {
+		itemPrettyPrint.setOnAction(event -> {
 			String code = mCodeArea.getText();
 			try {
 				code = mParser.prettyPrint(code);
