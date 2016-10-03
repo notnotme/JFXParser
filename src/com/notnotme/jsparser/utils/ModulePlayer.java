@@ -21,21 +21,16 @@ package com.notnotme.jsparser.utils;
  * ================================================================
  */
 
+import org.muforge.musound.muxm.Loader;
+import org.muforge.musound.muxm.Module;
+import org.muforge.musound.muxm.ModuleEngine;
+
+import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-
-import org.muforge.musound.muxm.Loader;
-import org.muforge.musound.muxm.Module;
-import org.muforge.musound.muxm.ModuleEngine;
 
 /**
  * <p>A simple class that uses MuXM API and JavaSound to play audio from given file names.</p>

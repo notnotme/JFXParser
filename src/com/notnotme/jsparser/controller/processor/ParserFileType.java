@@ -2,18 +2,19 @@ package com.notnotme.jsparser.controller.processor;
 
 import com.notnotme.jsparser.controller.processor.json.JsonParser;
 import com.notnotme.jsparser.utils.Utils;
+import javafx.stage.FileChooser;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.stage.FileChooser;
 
 public enum ParserFileType {
 	JSON("Json", JsonParser.class, "json", "js");
-	
+
 	private final String mName;
 	private final Class<? extends Parser> mClass;
 	private final String[] mExtensions;
-	
+
 	ParserFileType(String name, Class<? extends Parser> clazz, String... extensions) {
 		mName = name;
 		mClass = clazz;
@@ -27,7 +28,7 @@ public enum ParserFileType {
 	public String[] getExtensions() {
 		return mExtensions;
 	}
-	
+
 	public Parser createParser() {
 		try {
 			return mClass.newInstance();
@@ -35,7 +36,7 @@ public enum ParserFileType {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static ParserFileType getTypeByExtension(File file) {
 		String extension = Utils.getExtension(file);
 		for(ParserFileType type : values()) {
@@ -47,7 +48,7 @@ public enum ParserFileType {
 		}
 		return null;
 	}
-	
+
 	public static ParserFileType getTypeByName(String name) {
 		for(ParserFileType type : values()) {
 			if (type.mName.equals(name)) {
@@ -56,25 +57,25 @@ public enum ParserFileType {
 		}
 		return null;
 	}
-	
+
 	public static List<FileChooser.ExtensionFilter> getExtensionFilters() {
 		ArrayList<FileChooser.ExtensionFilter> filters = new ArrayList<>();
 		ArrayList<String> extensionsList = new ArrayList<>();
-		
+
 		for (ParserFileType type : values()) {
 			for (String extension : type.mExtensions) {
 				extensionsList.add("*." + extension);
 			}
-			
+
 			filters.add(new FileChooser.ExtensionFilter(type.mName, extensionsList));
 			extensionsList.clear();
 		}
-		
+
 		return filters;
 	}
-	
+
 	public static Parser createParser(ParserFileType type) {
 		return type.createParser();
 	}
-	
+
 }

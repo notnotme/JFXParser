@@ -5,12 +5,6 @@ import com.notnotme.jsparser.controller.factory.StageController;
 import com.notnotme.jsparser.controller.processor.ParserFileType;
 import com.notnotme.jsparser.ui.view.EditorTab;
 import com.notnotme.jsparser.utils.Utils;
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,11 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -37,6 +27,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
+
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class MainWindowController extends StageController {
 
@@ -69,7 +66,7 @@ public final class MainWindowController extends StageController {
 				null,
 				new ControllerFactory(application, stage));
 	}
-		
+
 	public MainWindowController(Application application, Stage stage) {
 		super(application, stage);
 		mTabControllers = new ArrayList<>();
@@ -151,11 +148,11 @@ public final class MainWindowController extends StageController {
 			}
 		});
 
-		
+
 		mFileChooser = new FileChooser();
 		mFileChooser.setInitialFileName("");
 		mFileChooser.getExtensionFilters().addAll(ParserFileType.getExtensionFilters());
-		
+
 		Stage stage = getStage();
 		stage.setTitle(resources.getString("appname"));
 		stage.setScene(new Scene(mRoot));
@@ -175,13 +172,13 @@ public final class MainWindowController extends StageController {
 		if (file != null) {
 			mFileChooser.setTitle(resourceBundle.getString("load"));
 			mFileChooser.setInitialDirectory(file.getParentFile());
-			
+
 			// We load file according to their extensions, not the content
 			ParserFileType type = ParserFileType.getTypeByExtension(file);
 			createNewEditorTab(type, file, true);
 		}
 	}
-	
+
 	private void createNewEditorTab(ParserFileType type, File file, boolean loadFile) {
 		if (type == null) {
 			Utils.showErrorDialog(file.getName(), getResources().getString("cant_handle_filetype"));
@@ -191,7 +188,7 @@ public final class MainWindowController extends StageController {
 		try {
 			EditorTabController newTabController =
 					EditorTabController.create(getApplication(), getStage(), type);
-			
+
 			EditorTab newTab = new EditorTab(file);
 			newTab.setClosable(true);
 			newTab.setContent(newTabController.getRoot());
@@ -212,7 +209,7 @@ public final class MainWindowController extends StageController {
 				if (newValue) {
 					EditorTabController tabController = mTabControllers.get(mTabPane.getTabs().indexOf(newTab));
 					tabController.onEditorTabSelected();
-					
+
 					mParserChooser.valueProperty().removeListener(mParserChooserListener);
 					mParserChooser.getSelectionModel().select(tabController.getParserFileType());
 					mParserChooser.valueProperty().addListener(mParserChooserListener);
@@ -237,7 +234,7 @@ public final class MainWindowController extends StageController {
 			}
 		}
 	}
-	
+
 	private void onStageClose() {
 		// check if tabs are edited and build a list with them
 		mTabControllers.stream().forEach((tabController) -> {
@@ -247,7 +244,7 @@ public final class MainWindowController extends StageController {
 			}
 			tabController.shutDown();
 		});
-		
+
 		getStage().hide();
 	}
 
@@ -263,5 +260,5 @@ public final class MainWindowController extends StageController {
 			}
 		}
 	}
-	
+
 }

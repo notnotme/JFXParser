@@ -1,7 +1,8 @@
 package com.notnotme.jsparser.utils;
 
-import java.io.File;
 import javafx.scene.control.Alert;
+
+import java.io.File;
 
 public final class Utils {
 
@@ -23,5 +24,5 @@ public final class Utils {
 			return "";
 		}
 	}
-	
+
 }

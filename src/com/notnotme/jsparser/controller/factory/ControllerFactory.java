@@ -2,10 +2,11 @@ package com.notnotme.jsparser.controller.factory;
 
 import com.notnotme.jsparser.controller.processor.ParserFileType;
 import com.notnotme.jsparser.controller.ui.EditorTabController;
-import java.lang.reflect.InvocationTargetException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import java.lang.reflect.InvocationTargetException;
 
 public final class ControllerFactory implements Callback<Class<?>, Object> {
 
@@ -18,7 +19,7 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 		mStage = null;
 		mProcessorFileType = null;
 	}
-	
+
 	public ControllerFactory(Application application, Stage stage) {
 		mApplication = application;
 		mStage = stage;
@@ -43,7 +44,7 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 			} else if (Controller.class.isAssignableFrom(type)) {
 				// Call the class first ctor
 				return type.getConstructors()[0].newInstance(mApplication);
-			} 
+			}
 		} catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new RuntimeException(e);
 		}

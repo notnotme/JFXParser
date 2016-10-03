@@ -6,33 +6,13 @@ import com.notnotme.jsparser.controller.processor.Parser;
 import com.notnotme.jsparser.controller.processor.ParserFileType;
 import com.notnotme.jsparser.ui.view.EditorTab;
 import com.notnotme.jsparser.utils.Utils;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.ResourceBundle;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableView;
+import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
@@ -42,8 +22,19 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 
+import java.io.*;
+import java.net.URL;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public final class EditorTabController extends StageController {
-	
+
 	private final static String TAG = EditorTabController.class.getSimpleName();
 
 	@FXML private BorderPane mRoot;
@@ -52,7 +43,7 @@ public final class EditorTabController extends StageController {
 	@FXML private TreeTableView mTreeTableView;
 
 	private ContextMenu mEditorContextMenu;
-	
+
 	private String mStatusMessage;
 	private Paint mStatusColor;
 	private Label mStatusLabel;
@@ -60,7 +51,7 @@ public final class EditorTabController extends StageController {
 	private ParserFileType mParserFileType;
 	private EditorTab mEditorTab;
 	private Parser mParser;
-	
+
 	private final ExecutorService mExecutorService;
 	private Future mParsingFutur;
 
@@ -78,7 +69,7 @@ public final class EditorTabController extends StageController {
 		loader.load();
 		return loader.getController();
 	}
-	
+
 	public EditorTabController(Application application, Stage stage, ParserFileType type) {
 		super(application, stage);
 		mParserFileType = type;
@@ -88,7 +79,7 @@ public final class EditorTabController extends StageController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		super.initialize(location, resources);
-		
+
 		mEditorContextMenu = createContextMenu();
 		mCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(mCodeArea));
 		mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
@@ -96,10 +87,10 @@ public final class EditorTabController extends StageController {
 			mCodeArea.getContextMenu().show(getStage());
 			event.consume();
 		});
-		
+
 		setParserFileType(mParserFileType);
 	}
-	
+
 	public void shutDown() {
 		try {
 			mExecutorService.shutdown();
@@ -108,11 +99,11 @@ public final class EditorTabController extends StageController {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}
 	}
-	
+
 	public void setParserFileType(ParserFileType parserFileType) {
 		mParserFileType = parserFileType;
 		mParser = parserFileType.createParser();
-				
+
 		mCodeArea.getStylesheets().clear();
 		mCodeArea.getStylesheets().add(mParser.getStylesheets());
 
@@ -127,17 +118,17 @@ public final class EditorTabController extends StageController {
 		// todo: later we can use an other kind of control to show character count
 		// or carret position, number of words..
 		setStatusMessage(mStatusMessage, mStatusColor);
-		
+
 		// Without this there is a bug when you open another tab then switch to a previous one.
 		// Without this trying to format text (ctrl+space) will always format the last tab.
 		mCodeArea.setContextMenu(null);
 		mCodeArea.setContextMenu(mEditorContextMenu);
-		
+
 		Platform.runLater(() -> {
 			mCodeArea.requestFocus();
 		});
 	}
-	
+
 	public void loadContent() {
 		String line;
 		StringBuilder stringBuilder = new StringBuilder();
@@ -156,18 +147,18 @@ public final class EditorTabController extends StageController {
 
 		mCodeArea.replaceText(stringBuilder.toString());
 	}
-	
+
 	private ContextMenu createContextMenu() {
 		ResourceBundle resources = getResources();
 		ContextMenu menu = new ContextMenu();
-		
+
 		MenuItem itemCopy = new MenuItem(resources.getString("copy"));
 		itemCopy.setAccelerator(KeyCombination.keyCombination("CTRL+C"));
 		itemCopy.setOnAction((ActionEvent event) -> {
 			mCodeArea.copy();
 			event.consume();
 		});
-		
+
 		MenuItem itemCut = new MenuItem(resources.getString("cut"));
 		itemCut.setAccelerator(KeyCombination.keyCombination("CTRL+X"));
 		itemCut.setOnAction((ActionEvent event) -> {
@@ -181,7 +172,7 @@ public final class EditorTabController extends StageController {
 			mCodeArea.paste();
 			event.consume();
 		});
-		
+
 		MenuItem itemPrettyPrint = new MenuItem(resources.getString("format"));
 		itemPrettyPrint.setAccelerator(KeyCombination.keyCombination("CTRL+SPACE"));
 		itemPrettyPrint.setOnAction((ActionEvent event) -> {
@@ -198,7 +189,7 @@ public final class EditorTabController extends StageController {
 			mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
 			event.consume();
 		});
-		
+
 		menu.getItems().addAll(itemCopy, itemCut, itemPaste, new SeparatorMenuItem(), itemPrettyPrint);
 		return menu;
 	}
@@ -235,14 +226,14 @@ public final class EditorTabController extends StageController {
 			}
 		});
 	}
-	
+
 	private void setStatusMessage(String message, Paint color) {
 		mStatusColor = color;
 		mStatusMessage = message;
 		mStatusLabel.setText(mStatusMessage);
 		mStatusLabel.setTextFill(mStatusColor);
 	}
-	
+
 	public void saveContent() {
 		Logger.getLogger(TAG).log(Level.INFO, "Not implemented: {0}", getEditorTab().getFile());
 	}
@@ -251,11 +242,11 @@ public final class EditorTabController extends StageController {
 		Logger.getLogger(TAG).log(Level.INFO, "Not implemented");
 		return false;
 	}
-	
+
 	public EditorTab getEditorTab() {
 		return mEditorTab;
 	}
-	
+
 	public void setEditorPane(EditorTab editorTab) {
 		mEditorTab = editorTab;
 	}
@@ -287,9 +278,9 @@ public final class EditorTabController extends StageController {
 	public void setStatusLabel(Label label) {
 		mStatusLabel = label;
 	}
-	
+
 	public Label getStatusLabel() {
 		return mStatusLabel;
 	}
-	
+
 }

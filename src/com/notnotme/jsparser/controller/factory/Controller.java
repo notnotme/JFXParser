@@ -1,9 +1,10 @@
 package com.notnotme.jsparser.controller.factory;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.Initializable;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
@@ -26,5 +27,5 @@ public class Controller implements Initializable {
 	public ResourceBundle getResources() {
 		return mResources;
 	}
-	
+
 }

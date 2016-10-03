@@ -3,12 +3,6 @@ package com.notnotme.jsparser.controller.ui;
 import com.notnotme.jsparser.controller.factory.ControllerFactory;
 import com.notnotme.jsparser.controller.factory.StageController;
 import com.notnotme.jsparser.utils.ModulePlayer;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -22,6 +16,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class AboutDialogController extends StageController {
 
@@ -44,7 +45,7 @@ public final class AboutDialogController extends StageController {
 				null,
 				new ControllerFactory(application, stage));
 	}
-	
+
 	public AboutDialogController(Application application, Stage stage) {
 		super(application, stage);
 	}

@@ -5,6 +5,12 @@ import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
 import com.notnotme.jsparser.controller.processor.Parser;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.util.Pair;
+import org.fxmisc.richtext.StyleSpans;
+import org.fxmisc.richtext.StyleSpansBuilder;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,11 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
-import javafx.util.Pair;
-import org.fxmisc.richtext.StyleSpans;
-import org.fxmisc.richtext.StyleSpansBuilder;
 
 public final class JsonParser implements Parser<Pair<String, JsonValue>, String> {
 
@@ -40,7 +41,7 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 	);
 
 	private JsonValue mJsonValue;
-	
+
 	public JsonParser() {
 	}
 
@@ -64,7 +65,7 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 		} catch (Exception e) {
 			return null;
 		}
-		
+
 		int lastKwEnd = 0;
 		StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 		while (matcher.find()) {
@@ -106,10 +107,10 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 		columnList.add(columnTree);
 		columnList.add(columnType);
 		columnList.add(columnValue);
-		
+
 		return columnList;
 	}
-	
+
 	@Override
 	public TreeItem<Pair<String, JsonValue>> parseCode(String code) throws Exception {
 		TreeItem<Pair<String, JsonValue>> rootItem = new TreeItem<>(new Pair<>("Root", Json.parse(code)));
@@ -117,14 +118,14 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 		rootItem.setExpanded(true);
 		return rootItem;
 	}
-	
+
 	private List<TreeItem<Pair<String, JsonValue>>> parse(JsonValue jsonValue) {
 		List<TreeItem<Pair<String, JsonValue>>> childs = new ArrayList<>();
 		if (jsonValue.isObject()) {
 			for (JsonObject.Member member : jsonValue.asObject()) {
 				TreeItem<Pair<String, JsonValue>> child = new TreeItem<>(
 						new Pair<>(member.getName(), member.getValue()));
-				
+
 				child.getChildren().addAll(parse(child.getValue().getValue()));
 				child.setExpanded(true);
 				childs.add(child);
@@ -134,14 +135,14 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 			for (JsonValue value : jsonValue.asArray()) {
 				TreeItem<Pair<String, JsonValue>> child = new TreeItem<>(
 						new Pair<>("[" + index + "]", value));
-				
+
 				child.getChildren().addAll(parse(value));
 				child.setExpanded(true);
 				childs.add(child);
 				index++;
 			}
 		}
-		
+
 		return childs;
 	}
 
