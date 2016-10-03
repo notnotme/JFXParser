@@ -10,13 +10,13 @@ import java.util.List;
 public interface Parser<S,T> {
 
 	/**
-	 * @return The style sheet containg the color classes usable with
+	 * @return The style sheet containing the color classes usable with
 	 * computeHighlighting
 	 */
 	String getStylesheets();
 
 	/**
-	 * Compute the hilight of the current editor's code
+	 * Compute the highlight of the current editor's code
 	 * @param code The content of the editor as a String
 	 * @return  A StyleSpans of Strings containing the css classes to apply to the text
 	 */
@@ -33,7 +33,7 @@ public interface Parser<S,T> {
 	/**
 	 * Return a pretty print of code
 	 * @return A String that represent the same code as before, but pretty printed
-	 * @param code A String representating the code
+	 * @param code A String representing the code
 	 * @throws Exception If an error occur during the operation
 	 */
 	String prettyPrint(String code) throws Exception;

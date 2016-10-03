@@ -79,10 +79,9 @@ public final class MainWindowController extends StageController {
 		// Build a list of menuItem for the supported files
 		for(ParserFileType parserFileType : ParserFileType.values()) {
 			MenuItem menuItem = new MenuItem(parserFileType.getName());
-			menuItem.setOnAction((ActionEvent event) -> {
-				createNewEditorTab(parserFileType,
-						new File(getResources().getString("new_file") + " " + mTabControllers.size()), false);
-			});
+			menuItem.setOnAction((ActionEvent event) -> createNewEditorTab(parserFileType,
+					new File(getResources().getString("new_file") + " " + mTabControllers.size()), false));
+
 			mMenuNew.getItems().add(menuItem);
 		}
 		mItemLoad.setOnAction((ActionEvent event) -> {
@@ -123,7 +122,7 @@ public final class MainWindowController extends StageController {
 			Dragboard db = event.getDragboard();
 			boolean success = false;
 			if (db.hasFiles()) {
-				db.getFiles().stream().forEach((file) -> {
+				db.getFiles().forEach((file) -> {
 					ParserFileType type = ParserFileType.getTypeByExtension(file);
 					createNewEditorTab(type, file, true);
 				});
@@ -237,7 +236,7 @@ public final class MainWindowController extends StageController {
 
 	private void onStageClose() {
 		// check if tabs are edited and build a list with them
-		mTabControllers.stream().forEach((tabController) -> {
+		mTabControllers.forEach((tabController) -> {
 			if (tabController.isEdited()) {
 				// todo: show yes/no save dialog
 				tabController.saveContent();

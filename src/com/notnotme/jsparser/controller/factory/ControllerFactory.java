@@ -49,7 +49,7 @@ public final class ControllerFactory implements Callback<Class<?>, Object> {
 			throw new RuntimeException(e);
 		}
 
-		throw new RuntimeException("No contructor found");
+		throw new RuntimeException("No constructor found");
 	}
 
 }

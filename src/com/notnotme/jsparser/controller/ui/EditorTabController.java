@@ -53,11 +53,9 @@ public final class EditorTabController extends StageController {
 	private Parser mParser;
 
 	private final ExecutorService mExecutorService;
-	private Future mParsingFutur;
+	private Future mParsingFuture;
 
-	private final ChangeListener<String> mCodeAreaChangeListener = (obs, oldText, newText) -> {
-			parseCode(newText);
-		};
+	private final ChangeListener<String> mCodeAreaChangeListener = (obs, oldText, newText) -> parseCode(newText);
 
 	public static EditorTabController create(Application application, Stage stage, ParserFileType type) throws Exception {
 		FXMLLoader loader = new FXMLLoader(
@@ -116,17 +114,14 @@ public final class EditorTabController extends StageController {
 
 	public void onEditorTabSelected() {
 		// todo: later we can use an other kind of control to show character count
-		// or carret position, number of words..
+		// or caret position, number of words..
 		setStatusMessage(mStatusMessage, mStatusColor);
 
 		// Without this there is a bug when you open another tab then switch to a previous one.
 		// Without this trying to format text (ctrl+space) will always format the last tab.
 		mCodeArea.setContextMenu(null);
 		mCodeArea.setContextMenu(mEditorContextMenu);
-
-		Platform.runLater(() -> {
-			mCodeArea.requestFocus();
-		});
+		Platform.runLater(() -> mCodeArea.requestFocus());
 	}
 
 	public void loadContent() {
@@ -139,8 +134,6 @@ public final class EditorTabController extends StageController {
 			while ((line = reader.readLine()) != null) {
 				stringBuilder.append(line).append(lineSeparator);
 			}
-		} catch (FileNotFoundException ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {
 			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
 		}
@@ -195,11 +188,11 @@ public final class EditorTabController extends StageController {
 	}
 
 	private void parseCode(String code) {
-		if (mParsingFutur != null && mParsingFutur.isDone()) {
-			mParsingFutur.cancel(true);
+		if (mParsingFuture != null && mParsingFuture.isDone()) {
+			mParsingFuture.cancel(true);
 		}
 
-		mParsingFutur = mExecutorService.submit(() -> {
+		mParsingFuture = mExecutorService.submit(() -> {
 			final StyleSpans<Collection<String>> spans = mParser.computeHighlighting(code);
 			Platform.runLater(() -> {
 				try {

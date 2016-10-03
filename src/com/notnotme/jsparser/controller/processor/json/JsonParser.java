@@ -120,7 +120,7 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 	}
 
 	private List<TreeItem<Pair<String, JsonValue>>> parse(JsonValue jsonValue) {
-		List<TreeItem<Pair<String, JsonValue>>> childs = new ArrayList<>();
+		List<TreeItem<Pair<String, JsonValue>>> children = new ArrayList<>();
 		if (jsonValue.isObject()) {
 			for (JsonObject.Member member : jsonValue.asObject()) {
 				TreeItem<Pair<String, JsonValue>> child = new TreeItem<>(
@@ -128,7 +128,7 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 
 				child.getChildren().addAll(parse(child.getValue().getValue()));
 				child.setExpanded(true);
-				childs.add(child);
+				children.add(child);
 			}
 		} else if (jsonValue.isArray()) {
 			int index = 0;
@@ -138,12 +138,12 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 
 				child.getChildren().addAll(parse(value));
 				child.setExpanded(true);
-				childs.add(child);
+				children.add(child);
 				index++;
 			}
 		}
 
-		return childs;
+		return children;
 	}
 
 }
