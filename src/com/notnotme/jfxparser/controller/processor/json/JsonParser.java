@@ -1,10 +1,10 @@
-package com.notnotme.jsparser.controller.processor.json;
+package com.notnotme.jfxparser.controller.processor.json;
 
 import com.eclipsesource.json.Json;
 import com.eclipsesource.json.JsonObject;
 import com.eclipsesource.json.JsonValue;
 import com.eclipsesource.json.WriterConfig;
-import com.notnotme.jsparser.controller.processor.Parser;
+import com.notnotme.jfxparser.controller.processor.Parser;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
@@ -45,7 +45,7 @@ public final class JsonParser implements Parser<Pair<String, JsonValue>, String>
 
 	@Override
 	public String getStylesheets() {
-		return getClass().getResource("/com/notnotme/jsparser/controller/processor/json/json.css").toExternalForm();
+		return getClass().getResource("/com/notnotme/jfxparser/controller/processor/json/json.css").toExternalForm();
 	}
 
 	@Override

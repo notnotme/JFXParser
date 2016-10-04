@@ -1,4 +1,4 @@
-package com.notnotme.jsparser.ui.view;
+package com.notnotme.jfxparser.ui.view;
 
 import javafx.scene.control.Tab;
 

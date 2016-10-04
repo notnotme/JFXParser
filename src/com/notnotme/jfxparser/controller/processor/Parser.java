@@ -1,4 +1,4 @@
-package com.notnotme.jsparser.controller.processor;
+package com.notnotme.jfxparser.controller.processor;
 
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;

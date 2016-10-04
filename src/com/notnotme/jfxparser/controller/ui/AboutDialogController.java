@@ -1,8 +1,8 @@
-package com.notnotme.jsparser.controller.ui;
+package com.notnotme.jfxparser.controller.ui;
 
-import com.notnotme.jsparser.controller.factory.ControllerFactory;
-import com.notnotme.jsparser.controller.factory.StageController;
-import com.notnotme.jsparser.utils.ModulePlayer;
+import com.notnotme.jfxparser.controller.factory.ControllerFactory;
+import com.notnotme.jfxparser.controller.factory.StageController;
+import com.notnotme.jfxparser.utils.ModulePlayer;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,8 +37,8 @@ public final class AboutDialogController extends StageController {
 	public static void create(Application application, Stage parent) throws Exception {
 		Stage stage = new Stage();
 		stage.initOwner(parent);
-		FXMLLoader.load(AboutDialogController.class.getResource("/com/notnotme/jsparser/ui/fxml/AboutDialog.fxml"),
-				ResourceBundle.getBundle("com.notnotme.jsparser.ui.fxml.ui"),
+		FXMLLoader.load(AboutDialogController.class.getResource("/com/notnotme/jfxparser/ui/fxml/AboutDialog.fxml"),
+				ResourceBundle.getBundle("com.notnotme.jfxparser.ui.fxml.ui"),
 				null,
 				new ControllerFactory(application, stage));
 	}
@@ -99,7 +99,7 @@ public final class AboutDialogController extends StageController {
 
 	private void onEnter() {
 		try {
-			mPlayer = new ModulePlayer(getClass().getResource("/com/notnotme/jsparser/res/Ultrasyd-Groovy Elisa.xm").toURI().toURL());
+			mPlayer = new ModulePlayer(getClass().getResource("/com/notnotme/jfxparser/res/Ultrasyd-Groovy Elisa.xm").toURI().toURL());
 			new Thread(mPlayer).start();
 		} catch (NullPointerException | IOException | URISyntaxException ex) {
 			// can be null if file not found or lib missing

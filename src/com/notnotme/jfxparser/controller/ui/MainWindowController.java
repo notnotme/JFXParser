@@ -1,10 +1,10 @@
-package com.notnotme.jsparser.controller.ui;
+package com.notnotme.jfxparser.controller.ui;
 
-import com.notnotme.jsparser.controller.factory.ControllerFactory;
-import com.notnotme.jsparser.controller.factory.StageController;
-import com.notnotme.jsparser.controller.processor.ParserFileType;
-import com.notnotme.jsparser.ui.view.EditorTab;
-import com.notnotme.jsparser.utils.Utils;
+import com.notnotme.jfxparser.controller.factory.ControllerFactory;
+import com.notnotme.jfxparser.controller.factory.StageController;
+import com.notnotme.jfxparser.controller.processor.ParserFileType;
+import com.notnotme.jfxparser.ui.view.EditorTab;
+import com.notnotme.jfxparser.utils.Utils;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -58,8 +58,8 @@ public final class MainWindowController extends StageController {
 		};
 
 	public static void create(Application application, Stage stage) throws Exception {
-		FXMLLoader.load(MainWindowController.class.getResource("/com/notnotme/jsparser/ui/fxml/MainWindow.fxml"),
-				ResourceBundle.getBundle("com.notnotme.jsparser.ui.fxml.ui"),
+		FXMLLoader.load(MainWindowController.class.getResource("/com/notnotme/jfxparser/ui/fxml/MainWindow.fxml"),
+				ResourceBundle.getBundle("com.notnotme.jfxparser.ui.fxml.ui"),
 				null,
 				new ControllerFactory(application, stage));
 	}

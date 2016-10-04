@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import org.fxmisc.richtext.CodeArea?>
 <BorderPane fx:id="mRoot" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.notnotme.jsparser.controller.ui.EditorTabController">
+            fx:controller="com.notnotme.jfxparser.controller.ui.EditorTabController">
 	<center>
 		<SplitPane fx:id="mSplitPane" dividerPositions="0.5">
 			<CodeArea fx:id="mCodeArea"/>

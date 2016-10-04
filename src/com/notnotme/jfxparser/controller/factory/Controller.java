@@ -1,4 +1,4 @@
-package com.notnotme.jsparser.controller.factory;
+package com.notnotme.jfxparser.controller.factory;
 
 import javafx.application.Application;
 import javafx.fxml.Initializable;

@@ -1,12 +1,12 @@
-package com.notnotme.jsparser.controller.ui;
+package com.notnotme.jfxparser.controller.ui;
 
-import com.notnotme.jsparser.controller.factory.ControllerFactory;
-import com.notnotme.jsparser.controller.factory.StageController;
-import com.notnotme.jsparser.controller.processor.Parser;
-import com.notnotme.jsparser.controller.processor.ParserFileType;
-import com.notnotme.jsparser.ui.view.EditorTab;
-import com.notnotme.jsparser.ui.view.EditorTreeTableRow;
-import com.notnotme.jsparser.utils.Utils;
+import com.notnotme.jfxparser.controller.factory.ControllerFactory;
+import com.notnotme.jfxparser.controller.factory.StageController;
+import com.notnotme.jfxparser.controller.processor.Parser;
+import com.notnotme.jfxparser.controller.processor.ParserFileType;
+import com.notnotme.jfxparser.ui.view.EditorTab;
+import com.notnotme.jfxparser.ui.view.EditorTreeTableRow;
+import com.notnotme.jfxparser.utils.Utils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -61,8 +61,8 @@ public final class EditorTabController extends StageController {
 
 	public static EditorTabController create(Application application, Stage stage, ParserFileType type) throws Exception {
 		FXMLLoader loader = new FXMLLoader(
-				EditorTab.class.getResource("/com/notnotme/jsparser/ui/fxml/EditorTab.fxml"),
-				ResourceBundle.getBundle("com.notnotme.jsparser.ui.fxml.ui"),
+				EditorTab.class.getResource("/com/notnotme/jfxparser/ui/fxml/EditorTab.fxml"),
+				ResourceBundle.getBundle("com.notnotme.jfxparser.ui.fxml.ui"),
 				null,
 				new ControllerFactory(application, stage, type));
 

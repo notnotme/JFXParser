@@ -1,4 +1,4 @@
-package com.notnotme.jsparser.utils;
+package com.notnotme.jfxparser.utils;
 
 /* ================================================================
  * MuXM - MOD/XM/S3M player library for J2ME/J2SE

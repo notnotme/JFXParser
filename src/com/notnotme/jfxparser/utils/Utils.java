@@ -1,4 +1,4 @@
-package com.notnotme.jsparser.utils;
+package com.notnotme.jfxparser.utils;
 
 import javafx.scene.control.Alert;
 

@@ -1,7 +1,7 @@
-package com.notnotme.jsparser.controller.factory;
+package com.notnotme.jfxparser.controller.factory;
 
-import com.notnotme.jsparser.controller.processor.ParserFileType;
-import com.notnotme.jsparser.controller.ui.EditorTabController;
+import com.notnotme.jfxparser.controller.processor.ParserFileType;
+import com.notnotme.jfxparser.controller.ui.EditorTabController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Callback;

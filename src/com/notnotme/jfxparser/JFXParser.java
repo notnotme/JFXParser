@@ -1,6 +1,6 @@
-package com.notnotme.jsparser;
+package com.notnotme.jfxparser;
 
-import com.notnotme.jsparser.controller.ui.MainWindowController;
+import com.notnotme.jfxparser.controller.ui.MainWindowController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

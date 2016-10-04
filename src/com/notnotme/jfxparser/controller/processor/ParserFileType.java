@@ -1,7 +1,7 @@
-package com.notnotme.jsparser.controller.processor;
+package com.notnotme.jfxparser.controller.processor;
 
-import com.notnotme.jsparser.controller.processor.json.JsonParser;
-import com.notnotme.jsparser.utils.Utils;
+import com.notnotme.jfxparser.controller.processor.json.JsonParser;
+import com.notnotme.jfxparser.utils.Utils;
 import javafx.stage.FileChooser;
 
 import java.io.File;
