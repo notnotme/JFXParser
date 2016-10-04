@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/JFXParser</output-path>
     <properties id="javafx-properties">
       <options>
-        <option name="appClass" value="com.notnotme.jsparser.JFXParser" />
+        <option name="appClass" value="com.notnotme.jfxparser.JFXParser" />
         <option name="description" value="A simple parser for data files" />
         <option name="height" value="600" />
         <option name="htmlPlaceholderId" value="" />
