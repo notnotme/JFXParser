@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 
 public final class JsonParser implements Parser<Pair<String, JsonValue>, String> {
 
-	private static final String BRACE_PATTERN = "(\\{|\\})";
-	private static final String BRACKET_PATTERN = "(\\[|\\])";
+	private static final String BRACE_PATTERN = "([{}])";
+	private static final String BRACKET_PATTERN = "([\\[]])";
 
 	private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
 	private static final String NUMBER_PATTERN = "([0-9.]+)";
