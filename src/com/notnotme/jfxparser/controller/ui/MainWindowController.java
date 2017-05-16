@@ -28,6 +28,7 @@ import javafx.util.StringConverter;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,7 +83,7 @@ public final class MainWindowController extends StageController {
 			mMenuNew.getItems().add(menuItem);
 		}
 		mItemLoad.setOnAction(event -> {
-			loadFile();
+			loadFile(null);
 			event.consume();
 		});
 		mItemClose.setOnAction(event -> {
@@ -159,16 +160,28 @@ public final class MainWindowController extends StageController {
 			event.consume();
 		});
 		stage.show();
+
+		List<String> params = getApplication().getParameters().getRaw();
+		for(String file : params) {
+			File diskFile = new File(file);
+			if (diskFile.exists()) {
+				loadFile(diskFile);
+			}
+		}
 	}
 
-	private void loadFile() {
+	private void loadFile(File file) {
 		ResourceBundle resourceBundle = getResources();
-		mFileChooser.setTitle(resourceBundle.getString("load_title"));
-		File file = mFileChooser.showOpenDialog(getStage());
-		if (file != null) {
-			mFileChooser.setTitle(resourceBundle.getString("load"));
-			mFileChooser.setInitialDirectory(file.getParentFile());
 
+		if (file == null) {
+			mFileChooser.setTitle(resourceBundle.getString("load_title"));
+			file = mFileChooser.showOpenDialog(getStage());
+			if (file != null) {
+				mFileChooser.setInitialDirectory(file.getParentFile());
+			}
+		}
+
+		if (file != null) {
 			// We load file according to their extensions, not the content
 			ParserFileType type = ParserFileType.getTypeByExtension(file);
 			createNewEditorTab(type, file, true);
