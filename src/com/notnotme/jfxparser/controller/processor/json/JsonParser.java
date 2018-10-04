@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class JsonParser implements Parser<JsonValue> {
+public final class JsonParser implements Parser {
 
     private static final String BRACE_PATTERN = "([{}])";
     private static final String BRACKET_PATTERN = "([\\[]])";
@@ -85,16 +85,16 @@ public final class JsonParser implements Parser<JsonValue> {
     }
 
     @Override
-    public List<TreeTableColumn<Pair<String, JsonValue>, String>> getTreeTableViewColumns() {
-        TreeTableColumn<Pair<String, JsonValue>, String> columnTree = new TreeTableColumn<>("TREE");
+    public List<TreeTableColumn<Pair<String, ?>, String>> getTreeTableViewColumns() {
+        TreeTableColumn<Pair<String, ?>, String> columnTree = new TreeTableColumn<>("TREE");
         columnTree.setPrefWidth(150);
         columnTree.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getKey()));
         columnTree.setCellFactory(param -> new TextFieldTreeTableCell<>());
 
-        TreeTableColumn<Pair<String, JsonValue>, String> columnType = new TreeTableColumn<>("TYPE");
+        TreeTableColumn<Pair<String, ?>, String> columnType = new TreeTableColumn<>("TYPE");
         columnType.setPrefWidth(150);
         columnType.setCellValueFactory(param -> {
-            JsonValue value = param.getValue().getValue().getValue();
+            JsonValue value = (JsonValue) param.getValue().getValue().getValue();
             String stringValue = "";
             if (value.isObject()) {
                 stringValue = "Object";
@@ -114,10 +114,10 @@ public final class JsonParser implements Parser<JsonValue> {
         });
         columnType.setCellFactory(param -> new TextFieldTreeTableCell<>());
 
-        TreeTableColumn<Pair<String, JsonValue>, String> columnValue = new TreeTableColumn<>("VALUE");
+        TreeTableColumn<Pair<String, ?>, String> columnValue = new TreeTableColumn<>("VALUE");
         columnValue.setPrefWidth(250);
         columnValue.setCellValueFactory(param -> {
-            JsonValue value = param.getValue().getValue().getValue();
+            JsonValue value = (JsonValue) param.getValue().getValue().getValue();
             if (value.isObject() || value.isArray()) return null;
 
             String stringValue;
@@ -131,7 +131,7 @@ public final class JsonParser implements Parser<JsonValue> {
         });
         columnValue.setCellFactory(param -> new TextFieldTreeTableCell<>());
 
-        ArrayList<TreeTableColumn<Pair<String, JsonValue>, String>> columnList = new ArrayList<>();
+        ArrayList<TreeTableColumn<Pair<String, ?>, String>> columnList = new ArrayList<>();
         columnList.add(columnTree);
         columnList.add(columnType);
         columnList.add(columnValue);
@@ -140,28 +140,28 @@ public final class JsonParser implements Parser<JsonValue> {
     }
 
     @Override
-    public TreeItem<Pair<String, JsonValue>> parseCode(String code) {
-        TreeItem<Pair<String, JsonValue>> rootItem = new TreeItem<>(new Pair<>("Root", Json.parse(code)));
-        rootItem.getChildren().addAll(parse(rootItem.getValue().getValue()));
+    public TreeItem<Pair<String, ?>> parseCode(String code) {
+        TreeItem<Pair<String, ?>> rootItem = new TreeItem<>(new Pair<>("Root", Json.parse(code)));
+        rootItem.getChildren().addAll(parse((JsonValue) rootItem.getValue().getValue()));
         rootItem.setExpanded(true);
         return rootItem;
     }
 
-    private List<TreeItem<Pair<String, JsonValue>>> parse(JsonValue jsonValue) {
-        List<TreeItem<Pair<String, JsonValue>>> children = new ArrayList<>();
+    private List<TreeItem<Pair<String, ?>>> parse(JsonValue jsonValue) {
+        List<TreeItem<Pair<String, ?>>> children = new ArrayList<>();
         if (jsonValue.isObject()) {
             for (JsonObject.Member member : jsonValue.asObject()) {
-                TreeItem<Pair<String, JsonValue>> child = new TreeItem<>(
+                TreeItem<Pair<String, ?>> child = new TreeItem<>(
                         new Pair<>(member.getName(), member.getValue()));
 
-                child.getChildren().addAll(parse(child.getValue().getValue()));
+                child.getChildren().addAll(parse((JsonValue) child.getValue().getValue()));
                 child.setExpanded(true);
                 children.add(child);
             }
         } else if (jsonValue.isArray()) {
             int index = 0;
             for (JsonValue value : jsonValue.asArray()) {
-                TreeItem<Pair<String, JsonValue>> child = new TreeItem<>(
+                TreeItem<Pair<String, ?>> child = new TreeItem<>(
                         new Pair<>("[" + index + "]", value));
 
                 child.getChildren().addAll(parse(value));

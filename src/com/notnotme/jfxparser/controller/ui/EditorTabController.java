@@ -206,15 +206,15 @@ public final class EditorTabController extends StageController {
         }
 
         mParsingFuture = mExecutorService.submit(() -> {
-            final StyleSpans<Collection<String>> spans = mParser.computeHighlighting(code);
+            final StyleSpans<? extends Collection<String>> spans = mParser.computeHighlighting(code);
             Platform.runLater(() -> {
                 try {
                     mCodeArea.setStyleSpans(0, spans);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             });
 
-            TreeItem rootTreeItem;
+            TreeItem<Pair<String, ?>> rootTreeItem;
             try {
                 rootTreeItem = mParser.parseCode(code);
                 Platform.runLater(() -> {

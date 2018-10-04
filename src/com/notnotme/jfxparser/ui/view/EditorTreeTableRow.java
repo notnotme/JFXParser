@@ -5,7 +5,7 @@ import javafx.util.Pair;
 
 import java.util.ResourceBundle;
 
-public class EditorTreeTableRow<T> extends TreeTableRow<Pair<String, T>> {
+public class EditorTreeTableRow extends TreeTableRow<Pair<String, ?>> {
 
     private final ResourceBundle mResourceBundle;
     private final ContextMenu mContextMenu;
@@ -16,7 +16,7 @@ public class EditorTreeTableRow<T> extends TreeTableRow<Pair<String, T>> {
     }
 
     @Override
-    protected void updateItem(Pair<String, T> item, boolean empty) {
+    protected void updateItem(Pair<String, ?> item, boolean empty) {
         super.updateItem(item, empty);
         TreeItem treeItem = getTreeItem();
         if (treeItem != null && treeItem.getChildren().isEmpty()) {
@@ -36,7 +36,7 @@ public class EditorTreeTableRow<T> extends TreeTableRow<Pair<String, T>> {
         MenuItem collapseAllChildrenItems = new MenuItem(mResourceBundle.getString("collapse_all_children"));
 
         expandAllItems.setOnAction(event -> {
-            TreeItem<Pair<String, T>> item = getTreeItem();
+            TreeItem<Pair<String, ?>> item = getTreeItem();
             // fixme: If a crash occur here uncomment below
             // if (item == null) return;
 
@@ -45,18 +45,18 @@ public class EditorTreeTableRow<T> extends TreeTableRow<Pair<String, T>> {
             event.consume();
         });
         collapseAllItems.setOnAction(event -> {
-            TreeItem<Pair<String, T>> item = getTreeItem();
+            TreeItem<Pair<String, ?>> item = getTreeItem();
             item.setExpanded(false);
             expandAllChildren(item, false);
             event.consume();
         });
         expandAllChildrenItems.setOnAction(event -> {
-            TreeItem<Pair<String, T>> item = getTreeItem();
+            TreeItem<Pair<String, ?>> item = getTreeItem();
             expandAllChildren(item, true);
             event.consume();
         });
         collapseAllChildrenItems.setOnAction(event -> {
-            TreeItem<Pair<String, T>> item = getTreeItem();
+            TreeItem<Pair<String, ?>> item = getTreeItem();
             expandAllChildren(item, false);
             event.consume();
         });
@@ -67,7 +67,7 @@ public class EditorTreeTableRow<T> extends TreeTableRow<Pair<String, T>> {
         return contextMenu;
     }
 
-    private static <T> void expandAllChildren(TreeItem<Pair<String, T>> item, boolean expand) {
+    private static void expandAllChildren(TreeItem<Pair<String, ?>> item, boolean expand) {
         item.getChildren().forEach(o -> {
             if (!o.getChildren().isEmpty()) {
                 o.setExpanded(expand);

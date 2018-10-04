@@ -8,7 +8,7 @@ import org.fxmisc.richtext.model.StyleSpans;
 import java.util.Collection;
 import java.util.List;
 
-public interface Parser<S> {
+public interface Parser {
 
     /**
      * @return The style sheet containing the color classes usable with
@@ -22,7 +22,7 @@ public interface Parser<S> {
      * @param code The content of the editor as a String
      * @return A StyleSpans of Strings containing the css classes to apply to the text
      */
-    StyleSpans<Collection<String>> computeHighlighting(String code);
+    StyleSpans<? extends Collection<String>> computeHighlighting(String code);
 
     /**
      * Parse a String
@@ -31,7 +31,7 @@ public interface Parser<S> {
      * @return The root TreeItem than describe the parsed code
      * @throws Exception If an error occur during parsing
      */
-    TreeItem<Pair<String, S>> parseCode(String code) throws Exception;
+    TreeItem<Pair<String, ?>> parseCode(String code) throws Exception;
 
     /**
      * Return a pretty print of code
@@ -45,6 +45,6 @@ public interface Parser<S> {
     /**
      * @return A list of column to display in the TreeTableView next to the editor
      */
-    List<TreeTableColumn<Pair<String, S>, String>> getTreeTableViewColumns();
+    List<TreeTableColumn<Pair<String, ?>, String>> getTreeTableViewColumns();
 
 }
