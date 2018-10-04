@@ -41,77 +41,78 @@ import java.util.logging.Logger;
  */
 public final class ModulePlayer implements Runnable {
 
-	private final static String TAG = ModulePlayer.class.getSimpleName();
-	private final int SAMPLE_RATE = 44100;
+    private final static String TAG = ModulePlayer.class.getSimpleName();
+    private final int SAMPLE_RATE = 44100;
 
-	private final ModuleEngine engine;
-	private boolean songLoop, running;
+    private final ModuleEngine engine;
+    private boolean songLoop, running;
 
-	public ModulePlayer(URL modfile) throws IOException {
-		Module m;
-		try (InputStream i = modfile.openStream()) {
-			m = Loader.load(i);
-		}
+    public ModulePlayer(URL modfile) throws IOException {
+        Module m;
+        try (InputStream i = modfile.openStream()) {
+            m = Loader.load(i);
+        }
 
-		engine = new ModuleEngine(m);
-		engine.setSampleRate(SAMPLE_RATE);
-		songLoop = true;
-	}
+        engine = new ModuleEngine(m);
+        engine.setSampleRate(SAMPLE_RATE);
+        songLoop = true;
+    }
 
-	/**
-	 *	Set whether the song is to loop continuously or not.
-	 *	The default is to loop.
-	 * @param loop true if the song should loop
-	 */
-	public void setLoop(boolean loop) {
-		songLoop = loop;
-	}
+    /**
+     * Set whether the song is to loop continuously or not.
+     * The default is to loop.
+     *
+     * @param loop true if the song should loop
+     */
+    public void setLoop(boolean loop) {
+        songLoop = loop;
+    }
 
-	/**
-	 *	Begin playback.
-	 *	This method will return once the song has finished, or stop has been called.
-	 */
-	@Override
-	public void run() {
-		Logger.getLogger(TAG).log(Level.INFO, "> run");
+    /**
+     * Begin playback.
+     * This method will return once the song has finished, or stop has been called.
+     */
+    @Override
+    public void run() {
+        Logger.getLogger(TAG).log(Level.INFO, "> run");
 
-		running = true;
-		int bufframes = 1024;
-		byte[] obuf = new byte[bufframes << 2];
+        running = true;
+        int bufframes = 1024;
+        byte[] obuf = new byte[bufframes << 2];
 
-		AudioFormat af = new AudioFormat(SAMPLE_RATE, 16, 2, true, false);
-		DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, af);
+        AudioFormat af = new AudioFormat(SAMPLE_RATE, 16, 2, true, false);
+        DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, af);
 
-		try (SourceDataLine line = (SourceDataLine) AudioSystem.getLine(lineInfo)) {
-			line.open();
-			line.start();
+        try (SourceDataLine line = (SourceDataLine) AudioSystem.getLine(lineInfo)) {
+            line.open();
+            line.start();
 
-			int songlen = engine.getSongLength();
-			int remain = songlen;
-			while (remain > 0 && running) {
-				int count = bufframes;
-				if (count > remain)
-					count = remain;
-				engine.getAudio(obuf, 0, count, true);
-				line.write(obuf, 0, count << 2);
-				remain -= count;
-				if (remain <= 0 && songLoop)
-					remain = songlen;
-			}
+            int songlen = engine.getSongLength();
+            int remain = songlen;
+            while (remain > 0 && running) {
+                int count = bufframes;
+                if (count > remain)
+                    count = remain;
+                engine.getAudio(obuf, 0, count, true);
+                line.write(obuf, 0, count << 2);
+                remain -= count;
+                if (remain <= 0 && songLoop)
+                    remain = songlen;
+            }
 
-			line.drain();
-		} catch (LineUnavailableException e) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, e);
-		}
+            line.drain();
+        } catch (LineUnavailableException e) {
+            Logger.getLogger(TAG).log(Level.SEVERE, null, e);
+        }
 
-		Logger.getLogger(TAG).log(Level.INFO, "< run");
-	}
+        Logger.getLogger(TAG).log(Level.INFO, "< run");
+    }
 
-	/**
-	 *	Instruct the run() method to finish playing and return.
-	 */
-	public void stop() {
-		running = false;
-	}
+    /**
+     * Instruct the run() method to finish playing and return.
+     */
+    public void stop() {
+        running = false;
+    }
 
 }

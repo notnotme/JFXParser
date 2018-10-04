@@ -7,78 +7,79 @@
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
 <BorderPane fx:id="mRoot" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.notnotme.jfxparser.controller.ui.MainWindowController"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.notnotme.jfxparser.controller.ui.MainWindowController"
             stylesheets="@style.css">
-	<top>
-		<MenuBar BorderPane.alignment="CENTER">
-			<Menu text="%file">
-				<Menu text="%new" fx:id="mMenuNew">
-					<graphic>
-						<ImageView pickOnBounds="true" preserveRatio="true">
-							<Image url="@../../res/icons/database_start.png"/>
-						</ImageView>
-					</graphic>
-					<accelerator>
-						<KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
-					</accelerator>
-				</Menu>
-				<MenuItem fx:id="mItemLoad" text="%load">
-					<graphic>
-						<ImageView pickOnBounds="true" preserveRatio="true">
-							<Image url="@../../res/icons/disk_edit.png"/>
-						</ImageView>
-					</graphic>
-					<accelerator>
-						<KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
-					</accelerator>
-				</MenuItem>
-				<SeparatorMenuItem mnemonicParsing="false"/>
-				<MenuItem fx:id="mItemClose" text="%quit">
-					<graphic>
-						<ImageView pickOnBounds="true" preserveRatio="true">
-							<Image url="@../../res/icons/decline.png"/>
-						</ImageView>
-					</graphic>
-					<accelerator>
-						<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
-					</accelerator>
-				</MenuItem>
-			</Menu>
-			<Menu text="%help">
-				<MenuItem fx:id="mItemAbout" text="%about">
-					<graphic>
-						<ImageView pickOnBounds="true" preserveRatio="true">
-							<Image url="@../../res/icons/star_gold.png"/>
-						</ImageView>
-					</graphic>
-				</MenuItem>
-			</Menu>
-		</MenuBar>
-	</top>
-	<center>
-		<TabPane fx:id="mTabPane" BorderPane.alignment="CENTER"/>
-	</center>
-	<bottom>
-		<BorderPane BorderPane.alignment="CENTER">
-			<left>
-				<HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
-					<padding>
-						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-					</padding>
-					<Label fx:id="mStatusLabel"/>
-				</HBox>
-			</left>
-			<right>
-				<HBox BorderPane.alignment="CENTER_RIGHT">
-					<padding>
-						<Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-					</padding>
-					<ComboBox fx:id="mParserChooser"/>
-				</HBox>
-			</right>
-			<padding>
-				<Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
-			</padding>
-		</BorderPane>
-	</bottom>
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <Menu text="%file">
+                <Menu text="%new" fx:id="mMenuNew">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../../res/icons/database_start.png"/>
+                        </ImageView>
+                    </graphic>
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                    </accelerator>
+                </Menu>
+                <MenuItem fx:id="mItemLoad" text="%load">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../../res/icons/disk_edit.png"/>
+                        </ImageView>
+                    </graphic>
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem fx:id="mItemClose" text="%quit">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../../res/icons/decline.png"/>
+                        </ImageView>
+                    </graphic>
+                    <accelerator>
+                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                    </accelerator>
+                </MenuItem>
+            </Menu>
+            <Menu text="%help">
+                <MenuItem fx:id="mItemAbout" text="%about">
+                    <graphic>
+                        <ImageView pickOnBounds="true" preserveRatio="true">
+                            <Image url="@../../res/icons/star_gold.png"/>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
+            </Menu>
+        </MenuBar>
+    </top>
+    <center>
+        <TabPane fx:id="mTabPane" BorderPane.alignment="CENTER"/>
+    </center>
+    <bottom>
+        <BorderPane BorderPane.alignment="CENTER">
+            <left>
+                <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
+                    <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                    </padding>
+                    <Label fx:id="mStatusLabel"/>
+                </HBox>
+            </left>
+            <right>
+                <HBox BorderPane.alignment="CENTER_RIGHT">
+                    <padding>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                    </padding>
+                    <ComboBox fx:id="mParserChooser"/>
+                </HBox>
+            </right>
+            <padding>
+                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+            </padding>
+        </BorderPane>
+    </bottom>
 </BorderPane>

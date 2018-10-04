@@ -6,16 +6,16 @@ import javafx.stage.Stage;
 
 public class JFXParser extends Application {
 
-	@Override
-	public void start(Stage stage) throws Exception {
-		MainWindowController.create(this, stage);
-	}
+    @Override
+    public void start(Stage stage) throws Exception {
+        MainWindowController.create(this, stage);
+    }
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String[] args) {
-		launch(args);
-	}
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 }

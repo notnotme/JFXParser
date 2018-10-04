@@ -17,9 +17,10 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpans;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,247 +38,236 @@ import java.util.logging.Logger;
 
 public final class EditorTabController extends StageController {
 
-	private final static String TAG = EditorTabController.class.getSimpleName();
+    private final static String TAG = EditorTabController.class.getSimpleName();
 
-	@FXML private BorderPane mRoot;
-	@FXML private SplitPane mSplitPane;
-	@FXML private CodeArea mCodeArea;
-	@FXML private TreeTableView mTreeTableView;
+    @FXML
+    private BorderPane mRoot;
 
-	private ContextMenu mEditorContextMenu;
+    @FXML
+    private CodeArea mCodeArea;
 
-	private String mStatusMessage;
-	private Paint mStatusColor;
-	private Label mStatusLabel;
+    @FXML
+    private TreeTableView<Pair<String, ?>> mTreeTableView;
 
-	private ParserFileType mParserFileType;
-	private EditorTab mEditorTab;
-	private Parser mParser;
+    private ContextMenu mEditorContextMenu;
 
-	private final ExecutorService mExecutorService;
-	private Future mParsingFuture;
+    private String mStatusMessage;
+    private Paint mStatusColor;
+    private Label mStatusLabel;
 
-	private final ChangeListener<String> mCodeAreaChangeListener = (obs, oldText, newText) -> parseCode(newText);
+    private ParserFileType mParserFileType;
+    private EditorTab mEditorTab;
+    private Parser mParser;
 
-	public static EditorTabController create(Application application, Stage stage, ParserFileType type) throws Exception {
-		FXMLLoader loader = new FXMLLoader(
-				EditorTab.class.getResource("/com/notnotme/jfxparser/ui/fxml/EditorTab.fxml"),
-				ResourceBundle.getBundle("com.notnotme.jfxparser.ui.fxml.ui"),
-				null,
-				new ControllerFactory(application, stage, type));
+    private final ExecutorService mExecutorService;
+    private Future mParsingFuture;
 
-		loader.load();
-		return loader.getController();
-	}
+    private final ChangeListener<String> mCodeAreaChangeListener = (obs, oldText, newText) -> parseCode(newText);
 
-	public EditorTabController(Application application, Stage stage, ParserFileType type) {
-		super(application, stage);
-		mParserFileType = type;
-		mExecutorService = Executors.newFixedThreadPool(2);
-}
+    static EditorTabController create(Application application, Stage stage, ParserFileType type) throws Exception {
+        FXMLLoader loader = new FXMLLoader(
+                EditorTab.class.getResource("/com/notnotme/jfxparser/ui/fxml/EditorTab.fxml"),
+                ResourceBundle.getBundle("com.notnotme.jfxparser.ui.fxml.ui"),
+                null,
+                new ControllerFactory(application, stage, type));
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		super.initialize(location, resources);
+        loader.load();
+        return loader.getController();
+    }
 
-		mEditorContextMenu = createContextMenu();
-		mCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(mCodeArea));
-		mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
-		mCodeArea.setOnContextMenuRequested(event -> {
-			mCodeArea.getContextMenu().show(getStage());
-			event.consume();
-		});
+    public EditorTabController(Application application, Stage stage, ParserFileType type) {
+        super(application, stage);
+        mParserFileType = type;
+        mExecutorService = Executors.newFixedThreadPool(2);
+    }
 
-		ResourceBundle resourceBundle = getResources();
-		mTreeTableView.setRowFactory(param -> new EditorTreeTableRow(resourceBundle));
-		setParserFileType(mParserFileType);
-	}
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        super.initialize(location, resources);
 
-	public void shutDown() {
-		try {
-			mExecutorService.shutdown();
-			mExecutorService.awaitTermination(5, TimeUnit.SECONDS);
-		} catch (InterruptedException ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-		}
-	}
+        mEditorContextMenu = createContextMenu();
+        mCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(mCodeArea));
+        mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
+        mCodeArea.setOnContextMenuRequested(event -> {
+            mCodeArea.getContextMenu().show(getStage());
+            event.consume();
+        });
 
-	public void setParserFileType(ParserFileType parserFileType) {
-		mParserFileType = parserFileType;
-		mParser = parserFileType.createParser();
+        mTreeTableView.setRowFactory(param -> new EditorTreeTableRow(getResources()));
+        setParserFileType(mParserFileType);
+    }
 
-		mCodeArea.getStylesheets().clear();
-		mCodeArea.getStylesheets().add(mParser.getStylesheets());
+    void shutDown() {
+        try {
+            mExecutorService.shutdown();
+            mExecutorService.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+        }
+    }
 
-		mTreeTableView.getColumns().clear();
-		mTreeTableView.getColumns().addAll(mParser.getTreeTableViewColumns());
+    void setParserFileType(ParserFileType parserFileType) {
+        mParserFileType = parserFileType;
+        mParser = parserFileType.createParser();
 
-		String code = mCodeArea.getText();
-		parseCode(code);
-	}
+        mCodeArea.getStylesheets().clear();
+        mCodeArea.getStylesheets().add(mParser.getStylesheets());
 
-	public void onEditorTabSelected() {
-		// todo: later we can use an other kind of control to show character count
-		// or caret position, number of words..
-		setStatusMessage(mStatusMessage, mStatusColor);
+        mTreeTableView.getColumns().clear();
+        mTreeTableView.getColumns().addAll(mParser.getTreeTableViewColumns());
 
-		// Without this there is a bug when you open another tab then switch to a previous one.
-		// Without this trying to format text (ctrl+space) will always format the last tab.
-		mCodeArea.setContextMenu(null);
-		mCodeArea.setContextMenu(mEditorContextMenu);
-		Platform.runLater(() -> mCodeArea.requestFocus());
-	}
+        String code = mCodeArea.getText();
+        parseCode(code);
+    }
 
-	public void loadContent() {
-		String line;
-		StringBuilder stringBuilder = new StringBuilder();
+    void onEditorTabSelected() {
+        // todo: later we can use an other kind of control to show character count
+        // or caret position, number of words..
+        setStatusMessage(mStatusMessage, mStatusColor);
 
-		File file = getEditorTab().getFile();
-		String lineSeparator = String.format("%n");
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-			while ((line = reader.readLine()) != null) {
-				stringBuilder.append(line).append(lineSeparator);
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
-		}
+        // Without this there is a bug when you open another tab then switch to a previous one.
+        // Without this trying to format text (ctrl+space) will always format the last tab.
+        mCodeArea.setContextMenu(null);
+        mCodeArea.setContextMenu(mEditorContextMenu);
+        Platform.runLater(() -> mCodeArea.requestFocus());
+    }
 
-		mCodeArea.replaceText(stringBuilder.toString());
-	}
+    void loadContent() {
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
 
-	private ContextMenu createContextMenu() {
-		ResourceBundle resources = getResources();
-		ContextMenu menu = new ContextMenu();
+        File file = getEditorTab().getFile();
+        String lineSeparator = String.format("%n");
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append(lineSeparator);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(TAG).log(Level.SEVERE, null, ex);
+        }
 
-		MenuItem itemCopy = new MenuItem(resources.getString("copy"));
-		itemCopy.setAccelerator(KeyCombination.keyCombination("CTRL+C"));
-		itemCopy.setOnAction(event -> {
-			mCodeArea.copy();
-			event.consume();
-		});
+        try {
+            String code = mParser.prettyPrint(stringBuilder.toString());
+            mCodeArea.replaceText(code);
+        } catch (Exception e) {
+            Utils.showErrorDialog(null, e.getLocalizedMessage());
+        }
+    }
 
-		MenuItem itemCut = new MenuItem(resources.getString("cut"));
-		itemCut.setAccelerator(KeyCombination.keyCombination("CTRL+X"));
-		itemCut.setOnAction(event -> {
-			mCodeArea.cut();
-			event.consume();
-		});
+    private ContextMenu createContextMenu() {
+        ResourceBundle resources = getResources();
+        ContextMenu menu = new ContextMenu();
 
-		MenuItem itemPaste = new MenuItem(resources.getString("paste"));
-		itemPaste.setAccelerator(KeyCombination.keyCombination("CTRL+V"));
-		itemPaste.setOnAction(event -> {
-			mCodeArea.paste();
-			event.consume();
-		});
+        MenuItem itemCopy = new MenuItem(resources.getString("copy"));
+        itemCopy.setAccelerator(KeyCombination.keyCombination("CTRL+C"));
+        itemCopy.setOnAction(event -> {
+            mCodeArea.copy();
+            event.consume();
+        });
 
-		MenuItem itemPrettyPrint = new MenuItem(resources.getString("format"));
-		itemPrettyPrint.setAccelerator(KeyCombination.keyCombination("CTRL+SPACE"));
-		itemPrettyPrint.setOnAction(event -> {
-			String code = mCodeArea.getText();
-			try {
-				code = mParser.prettyPrint(code);
-			} catch (Exception e) {
-				Utils.showErrorDialog(null, e.getLocalizedMessage());
-			}
+        MenuItem itemCut = new MenuItem(resources.getString("cut"));
+        itemCut.setAccelerator(KeyCombination.keyCombination("CTRL+X"));
+        itemCut.setOnAction(event -> {
+            mCodeArea.cut();
+            event.consume();
+        });
 
-			mCodeArea.textProperty().removeListener(mCodeAreaChangeListener);
-			mCodeArea.replaceText(code);
-			mCodeArea.setStyleSpans(0, mParser.computeHighlighting(code));
-			mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
-			event.consume();
-		});
+        MenuItem itemPaste = new MenuItem(resources.getString("paste"));
+        itemPaste.setAccelerator(KeyCombination.keyCombination("CTRL+V"));
+        itemPaste.setOnAction(event -> {
+            mCodeArea.paste();
+            event.consume();
+        });
 
-		menu.getItems().addAll(itemCopy, itemCut, itemPaste, new SeparatorMenuItem(), itemPrettyPrint);
-		return menu;
-	}
+        MenuItem itemPrettyPrint = new MenuItem(resources.getString("format"));
+        itemPrettyPrint.setAccelerator(KeyCombination.keyCombination("CTRL+SPACE"));
+        itemPrettyPrint.setOnAction(event -> {
+            String code = mCodeArea.getText();
+            try {
+                code = mParser.prettyPrint(code);
+            } catch (Exception e) {
+                Utils.showErrorDialog(null, e.getLocalizedMessage());
+            }
 
-	private void parseCode(String code) {
-		if (mParsingFuture != null && mParsingFuture.isDone()) {
-			mParsingFuture.cancel(true);
-		}
+            mCodeArea.textProperty().removeListener(mCodeAreaChangeListener);
+            mCodeArea.replaceText(code);
+            mCodeArea.setStyleSpans(0, mParser.computeHighlighting(code));
+            mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
+            event.consume();
+        });
 
-		mParsingFuture = mExecutorService.submit(() -> {
-			final StyleSpans<Collection<String>> spans = mParser.computeHighlighting(code);
-			Platform.runLater(() -> {
-				try {
-					mCodeArea.setStyleSpans(0, spans);
-				} catch (Exception e) {}
-			});
+        menu.getItems().addAll(itemCopy, itemCut, itemPaste, new SeparatorMenuItem(), itemPrettyPrint);
+        return menu;
+    }
 
-			TreeItem rootTreeItem;
-			try {
-				rootTreeItem = mParser.parseCode(code);
-				Platform.runLater(() -> {
-					mTreeTableView.setRoot(rootTreeItem);
-					setStatusMessage(getResources().getString("ready"), Paint.valueOf("green"));
-				});
-			} catch (Exception e) {
-				Platform.runLater(() -> {
-					mTreeTableView.setRoot(null);
-					if (code.isEmpty()) {
-						setStatusMessage(getResources().getString("ready"), Paint.valueOf("green"));
-					} else {
-						setStatusMessage(e.getLocalizedMessage(), Paint.valueOf("red"));
-					}
-				});
-			}
-		});
-	}
+    private void parseCode(String code) {
+        if (mParsingFuture != null && !mParsingFuture.isDone()) {
+            mParsingFuture.cancel(true);
+        }
 
-	private void setStatusMessage(String message, Paint color) {
-		mStatusColor = color;
-		mStatusMessage = message;
-		mStatusLabel.setText(mStatusMessage);
-		mStatusLabel.setTextFill(mStatusColor);
-	}
+        mParsingFuture = mExecutorService.submit(() -> {
+            final StyleSpans<Collection<String>> spans = mParser.computeHighlighting(code);
+            Platform.runLater(() -> {
+                try {
+                    mCodeArea.setStyleSpans(0, spans);
+                } catch (Exception e) {
+                }
+            });
 
-	public void saveContent() {
-		Logger.getLogger(TAG).log(Level.INFO, "Not implemented: {0}", getEditorTab().getFile());
-	}
+            TreeItem rootTreeItem;
+            try {
+                rootTreeItem = mParser.parseCode(code);
+                Platform.runLater(() -> {
+                    mTreeTableView.setRoot(rootTreeItem);
+                    setStatusMessage(getResources().getString("ready"), Paint.valueOf("green"));
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    mTreeTableView.setRoot(null);
+                    if (code.isEmpty()) {
+                        setStatusMessage(getResources().getString("ready"), Paint.valueOf("green"));
+                    } else {
+                        setStatusMessage(e.getLocalizedMessage(), Paint.valueOf("red"));
+                    }
+                });
+            }
+        });
+    }
 
-	public boolean isEdited() {
-		Logger.getLogger(TAG).log(Level.INFO, "Not implemented");
-		return false;
-	}
+    private void setStatusMessage(String message, Paint color) {
+        mStatusColor = color;
+        mStatusMessage = message;
+        mStatusLabel.setText(mStatusMessage);
+        mStatusLabel.setTextFill(mStatusColor);
+    }
 
-	public EditorTab getEditorTab() {
-		return mEditorTab;
-	}
+    private EditorTab getEditorTab() {
+        return mEditorTab;
+    }
 
-	public void setEditorPane(EditorTab editorTab) {
-		mEditorTab = editorTab;
-	}
+    ParserFileType getParserFileType() {
+        return mParserFileType;
+    }
 
-	public ParserFileType getParserFileType() {
-		return mParserFileType;
-	}
+    BorderPane getRoot() {
+        return mRoot;
+    }
 
-	public BorderPane getRoot() {
-		return mRoot;
-	}
+    boolean isEdited() {
+        Logger.getLogger(TAG).log(Level.INFO, "Not implemented");
+        return false;
+    }
 
-	public SplitPane getSplitPane() {
-		return mSplitPane;
-	}
+    void saveContent() {
+        Logger.getLogger(TAG).log(Level.INFO, "Not implemented: {0}", getEditorTab().getFile());
+    }
 
-	public CodeArea getCodeArea() {
-		return mCodeArea;
-	}
+    void setEditorPane(EditorTab editorTab) {
+        mEditorTab = editorTab;
+    }
 
-	public TreeTableView getTreeTableView() {
-		return mTreeTableView;
-	}
-
-	public Parser getParser() {
-		return mParser;
-	}
-
-	public void setStatusLabel(Label label) {
-		mStatusLabel = label;
-	}
-
-	public Label getStatusLabel() {
-		return mStatusLabel;
-	}
+    void setStatusLabel(Label label) {
+        mStatusLabel = label;
+    }
 
 }

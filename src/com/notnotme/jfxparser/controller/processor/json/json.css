@@ -1,20 +1,20 @@
 .bracket {
-	-fx-fill: peru;
-	-fx-font-weight: bold;
+    -fx-fill: peru;
+    -fx-font-weight: bold;
 }
 .brace {
-	-fx-fill: orange;
-	-fx-font-weight: bold;
+    -fx-fill: orange;
+    -fx-font-weight: bold;
 }
 .string {
-	-fx-fill: blue;
+    -fx-fill: blue;
 }
 .number {
-	-fx-fill: violet;
+    -fx-fill: violet;
 }
 .boolean {
-	-fx-fill: green;
+    -fx-fill: green;
 }
 .null {
-	-fx-fill: red;
+    -fx-fill: red;
 }

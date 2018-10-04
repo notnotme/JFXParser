@@ -7,8 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="com.eclipsesource.minimal-json:minimal-json:0.9.4" level="project" />
-    <orderEntry type="library" exported="" name="org.fxmisc.richtext:richtextfx:0.6.10" level="project" />
+    <orderEntry type="library" exported="" name="com.eclipsesource.minimal-json:minimal-json:Release" level="project" />
+    <orderEntry type="library" exported="" name="org.fxmisc.richtext:richtextfx:Release" level="project" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>

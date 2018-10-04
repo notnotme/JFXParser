@@ -18,8 +18,8 @@
         <element id="module-output" name="JFXParser" />
       </element>
       <element id="directory" name="libs">
-        <element id="library" level="project" name="com.eclipsesource.minimal-json:minimal-json:0.9.4" />
-        <element id="library" level="project" name="org.fxmisc.richtext:richtextfx:0.6.10" />
+        <element id="library" level="project" name="com.eclipsesource.minimal-json:minimal-json:Release" />
+        <element id="library" level="project" name="org.fxmisc.richtext:richtextfx:Release" />
         <element id="file-copy" path="$PROJECT_DIR$/libs/muxm.jar" />
       </element>
     </root>

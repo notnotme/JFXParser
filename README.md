@@ -3,6 +3,9 @@ A little tool to help with text data format. In each tab it show a CodeArea on t
 on the right.It will highlight your code and can eventually format it in the CodeArea, and it show a graphic representation
 of it in the TreeTableView
 
+**Todo**
+- Find an alternative to richtextfx ? :,(
+
 **Features:**
 - Support multiple documents
 - Syntax highlighting, Tree representation of the code

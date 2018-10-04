@@ -5,15 +5,15 @@ import javafx.stage.Stage;
 
 public class StageController extends Controller {
 
-	private final Stage mStage;
+    private final Stage mStage;
 
-	public StageController(Application application, Stage stage) {
-		super(application);
-		mStage = stage;
-	}
+    public StageController(Application application, Stage stage) {
+        super(application);
+        mStage = stage;
+    }
 
-	public Stage getStage() {
-		return mStage;
-	}
+    protected Stage getStage() {
+        return mStage;
+    }
 
 }
