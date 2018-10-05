@@ -157,6 +157,14 @@ public final class EditorTabController extends StageController {
             String code = mParser.prettyPrint(stringBuilder.toString());
             mCodeArea.replaceText(code);
         } catch (Exception e) {
+            /* fixme:
+            // If the parsing fail and the text to parse is a oneliner
+            // This ill crash completly the app.
+            // One solution is to not print the text at all,
+            // but on the other hand, the user can paste a very long line
+            // and the result will be the same.
+            */
+            mCodeArea.replaceText(stringBuilder.toString());
             Utils.showErrorDialog(null, e.getLocalizedMessage());
         }
     }
@@ -186,20 +194,20 @@ public final class EditorTabController extends StageController {
             event.consume();
         });
 
+        // todo: fix this bloody keystroke >:(
         MenuItem itemPrettyPrint = new MenuItem(resources.getString("format"));
         itemPrettyPrint.setAccelerator(KeyCombination.keyCombination("CTRL+SPACE"));
         itemPrettyPrint.setOnAction(event -> {
             String code = mCodeArea.getText();
             try {
                 code = mParser.prettyPrint(code);
-            } catch (Exception e) {
-                Utils.showErrorDialog(null, e.getLocalizedMessage());
-            }
+            } catch (Exception ignored) {}
 
             mCodeArea.textProperty().removeListener(mCodeAreaChangeListener);
             mCodeArea.replaceText(code);
             mCodeArea.setStyleSpans(0, mParser.computeHighlighting(code));
             mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
+
             event.consume();
         });
 
@@ -217,8 +225,7 @@ public final class EditorTabController extends StageController {
             Platform.runLater(() -> {
                 try {
                     mCodeArea.setStyleSpans(0, spans);
-                } catch (Exception ignored) {
-                }
+                } catch (Exception ignored) {}
             });
 
             TreeItem<Pair<String, ?>> rootTreeItem;
@@ -275,6 +282,14 @@ public final class EditorTabController extends StageController {
 
     void setStatusLabel(Label label) {
         mStatusLabel = label;
+    }
+
+    void setWrapText(Boolean wrap) {
+        mCodeArea.setWrapText(wrap);
+    }
+
+    boolean isWrapText() {
+        return mCodeArea.isWrapText();
     }
 
 }

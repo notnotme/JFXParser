@@ -1,55 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.*?>
-<BorderPane fx:id="mRoot" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.121"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.notnotme.jfxparser.controller.ui.MainWindowController"
-            stylesheets="@style.css">
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane fx:id="mRoot" prefHeight="600.0" prefWidth="800.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.notnotme.jfxparser.controller.ui.MainWindowController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <Menu text="%file">
-                <Menu text="%new" fx:id="mMenuNew">
+                <Menu fx:id="mMenuNew" text="%new">
                     <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../../res/icons/database_start.png"/>
+                            <Image url="@../../res/icons/database_start.png" />
                         </ImageView>
                     </graphic>
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </Menu>
                 <MenuItem fx:id="mItemLoad" text="%load">
                     <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../../res/icons/disk_edit.png"/>
+                            <Image url="@../../res/icons/disk_edit.png" />
                         </ImageView>
                     </graphic>
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                        <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
-                <SeparatorMenuItem mnemonicParsing="false"/>
+                <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem fx:id="mItemClose" text="%quit">
                     <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../../res/icons/decline.png"/>
+                            <Image url="@../../res/icons/decline.png" />
                         </ImageView>
                     </graphic>
                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="DOWN" shortcut="UP"/>
+                        <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
             </Menu>
+            <Menu fx:id="mMenuOptions" text="%options">
+            <items>
+               <CheckMenuItem fx:id="mItemTextWrap" mnemonicParsing="false" text="%text_wrap">
+                  <accelerator>
+                     <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                  </accelerator>
+               </CheckMenuItem>
+            </items></Menu>
             <Menu text="%help">
                 <MenuItem fx:id="mItemAbout" text="%about">
                     <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../../res/icons/star_gold.png"/>
+                            <Image url="@../../res/icons/star_gold.png" />
                         </ImageView>
                     </graphic>
                 </MenuItem>
@@ -57,28 +71,28 @@
         </MenuBar>
     </top>
     <center>
-        <TabPane fx:id="mTabPane" BorderPane.alignment="CENTER"/>
+        <TabPane fx:id="mTabPane" BorderPane.alignment="CENTER" />
     </center>
     <bottom>
         <BorderPane BorderPane.alignment="CENTER">
             <left>
                 <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
                     <padding>
-                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                     </padding>
-                    <Label fx:id="mStatusLabel"/>
+                    <Label fx:id="mStatusLabel" />
                 </HBox>
             </left>
             <right>
                 <HBox BorderPane.alignment="CENTER_RIGHT">
                     <padding>
-                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                     </padding>
-                    <ComboBox fx:id="mParserChooser"/>
+                    <ComboBox fx:id="mParserChooser" />
                 </HBox>
             </right>
             <padding>
-                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
             </padding>
         </BorderPane>
     </bottom>

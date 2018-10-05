@@ -53,6 +53,9 @@ public final class MainWindowController extends StageController {
     private MenuItem mItemAbout;
 
     @FXML
+    private CheckMenuItem mItemTextWrap;
+
+    @FXML
     private TabPane mTabPane;
 
     @FXML
@@ -70,6 +73,14 @@ public final class MainWindowController extends StageController {
             if (newValue == null || mTabPane.getTabs().isEmpty()) return;
             mTabControllers.get(mTabPane.getSelectionModel().getSelectedIndex())
                     .setParserFileType(newValue);
+        }
+    };
+
+    private ChangeListener<? super Boolean> mTextWrapChangeListener = new ChangeListener<Boolean>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+            if (mTabControllers.isEmpty()) return;
+            mTabControllers.get(mTabPane.getSelectionModel().getSelectedIndex()).setWrapText(newValue);
         }
     };
 
@@ -110,6 +121,8 @@ public final class MainWindowController extends StageController {
             showAboutDialog();
             event.consume();
         });
+
+        mItemTextWrap.selectedProperty().addListener(mTextWrapChangeListener);
 
         mTabPane.setOnDragOver(event -> {
             if (event.getGestureSource() != mTabPane && event.getDragboard().hasFiles()) {
@@ -238,11 +251,17 @@ public final class MainWindowController extends StageController {
                     mParserChooser.valueProperty().removeListener(mParserChooserListener);
                     mParserChooser.getSelectionModel().select(tabController.getParserFileType());
                     mParserChooser.valueProperty().addListener(mParserChooserListener);
+
+                    mItemTextWrap.selectedProperty().removeListener(mTextWrapChangeListener);
+                    mItemTextWrap.setSelected(tabController.isWrapText());
+                    mItemTextWrap.selectedProperty().addListener(mTextWrapChangeListener);
                 }
             });
 
             newTabController.setEditorPane(newTab);
             newTabController.setStatusLabel(mStatusLabel);
+            newTabController.setWrapText(mItemTextWrap.isSelected());
+
             mTabControllers.add(newTabController);
             mTabPane.getTabs().add(newTab);
             if (loadFile) {

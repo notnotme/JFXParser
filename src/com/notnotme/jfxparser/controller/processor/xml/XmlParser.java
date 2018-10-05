@@ -1,12 +1,24 @@
 package com.notnotme.jfxparser.controller.processor.xml;
 
 import com.notnotme.jfxparser.controller.processor.Parser;
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.util.Pair;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +47,16 @@ public class XmlParser implements Parser {
     private static final int GROUP_EQUAL_SYMBOL = 2;
     private static final int GROUP_ATTRIBUTE_VALUE = 3;
 
+    private DocumentBuilder mDocumentBuilder;
+
     public XmlParser() {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+        try {
+            mDocumentBuilder = dbf.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -96,12 +117,32 @@ public class XmlParser implements Parser {
 
     @Override
     public String prettyPrint(String code) throws Exception {
-        return code;
+        return mDocumentBuilder == null ? code : format(code);
     }
 
     @Override
     public List<TreeTableColumn<Pair<String, ?>, String>> getTreeTableViewColumns() {
         return Arrays.asList(new TreeTableColumn<>("TREE"), new TreeTableColumn<>("VALUE"));
+    }
+
+    private String format(String code) throws IOException, SAXException, ParserConfigurationException {
+        Document document = parseXmlFile(code);
+
+        OutputFormat format = new OutputFormat(document);
+        format.setLineWidth(65);
+        format.setIndenting(true);
+        format.setIndent(2);
+        format.setPreserveEmptyAttributes(true);
+
+        Writer out = new StringWriter();
+        XMLSerializer serializer = new XMLSerializer(out, format);
+        serializer.serialize(document);
+
+        return out.toString();
+    }
+
+    private Document parseXmlFile(String in) throws ParserConfigurationException, IOException, SAXException {
+        return mDocumentBuilder.parse(new InputSource(new StringReader(in)));
     }
 
 }
