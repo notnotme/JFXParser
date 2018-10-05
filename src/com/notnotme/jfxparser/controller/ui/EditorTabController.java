@@ -18,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -86,6 +87,12 @@ public final class EditorTabController extends StageController {
         super.initialize(location, resources);
 
         mEditorContextMenu = createContextMenu();
+
+        // It's a hack... We need to embed the CodeArea in a VirtualizedScrollPane to make it show scrollbars...
+        // But this scroll pane is not usable in XML and so the EditorTab.xml file is wrong as the wrap should be done inside it.
+        ((SplitPane) mRoot.getChildren().get(0)).getItems().remove(mCodeArea);
+        ((SplitPane) mRoot.getChildren().get(0)).getItems().add(0, new VirtualizedScrollPane<>(mCodeArea));
+
         mCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(mCodeArea));
         mCodeArea.textProperty().addListener(mCodeAreaChangeListener);
         mCodeArea.setOnContextMenuRequested(event -> {
@@ -111,13 +118,13 @@ public final class EditorTabController extends StageController {
         mParser = parserFileType.createParser();
 
         mCodeArea.getStylesheets().clear();
-        mCodeArea.getStylesheets().add(mParser.getStylesheets());
-
         mTreeTableView.getColumns().clear();
+        mTreeTableView.setRoot(null);
+
+        mCodeArea.getStylesheets().add(mParser.getStylesheets());
         mTreeTableView.getColumns().addAll(mParser.getTreeTableViewColumns());
 
-        String code = mCodeArea.getText();
-        parseCode(code);
+        parseCode(mCodeArea.getText());
     }
 
     void onEditorTabSelected() {

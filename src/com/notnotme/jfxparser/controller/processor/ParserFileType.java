@@ -1,6 +1,7 @@
 package com.notnotme.jfxparser.controller.processor;
 
 import com.notnotme.jfxparser.controller.processor.json.JsonParser;
+import com.notnotme.jfxparser.controller.processor.xml.XmlParser;
 import com.notnotme.jfxparser.utils.Utils;
 import javafx.stage.FileChooser;
 
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum ParserFileType {
-    JSON("Json", JsonParser.class, "json", "js");
+    JSON("json", JsonParser.class, "json", "js"),
+    XML("xml", XmlParser.class, "xml");
 
     private final String mName;
     private final Class<? extends Parser> mClass;
